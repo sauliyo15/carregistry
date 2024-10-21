@@ -29,21 +29,32 @@ public class VehicleRepositoryImpl implements VehicleRepository {
 
     @Override
     public Vehicle addVehicle(Vehicle vehicle) throws Exception {
+        vehicle.setId(vehiclesList.size() + 1);
         vehiclesList.add(vehicle);
         return vehicle;
     }
 
     @Override
     public Vehicle updateVehicle(Integer id, Vehicle vehicle) throws Exception {
-        Optional<Vehicle> carResponse = Optional.of(vehiclesList.stream().filter(car -> car.getId() == id).findFirst().get());
-        if(carResponse.isPresent()) {
-            vehiclesList.remove(carResponse.get());
-            vehiclesList.add(vehicle);
+        Optional<Vehicle> vehic = vehiclesList.stream().filter(car -> car.getId().equals(id)).findFirst();
+
+        if (vehic.isPresent()) {
+            Vehicle existingVehicle = vehic.get();
+
+            existingVehicle.setBrand(vehicle.getBrand());
+            existingVehicle.setModel(vehicle.getModel());
+            existingVehicle.setMilleage(vehicle.getMilleage());
+            existingVehicle.setPrice(vehicle.getPrice());
+            existingVehicle.setYear(vehicle.getYear());
+            existingVehicle.setDescription(vehicle.getDescription());
+            existingVehicle.setColour(vehicle.getColour());
+            existingVehicle.setFuelType(vehicle.getFuelType());
+            existingVehicle.setNumDoors(vehicle.getNumDoors());
+
+            return existingVehicle;
+        } else {
+            throw new Exception("Vehículo no encontrado");
         }
-        else {
-            throw new Exception();
-        }
-        return vehicle;
     }
 
     @Override

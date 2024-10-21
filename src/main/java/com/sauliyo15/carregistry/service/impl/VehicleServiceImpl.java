@@ -1,12 +1,14 @@
 package com.sauliyo15.carregistry.service.impl;
 
+import com.sauliyo15.carregistry.controller.dtos.VehicleRequest;
+import com.sauliyo15.carregistry.controller.dtos.VehicleResponse;
 import com.sauliyo15.carregistry.model.Vehicle;
 import com.sauliyo15.carregistry.repository.VehicleRepository;
 import com.sauliyo15.carregistry.service.VehicleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -17,20 +19,25 @@ public class VehicleServiceImpl implements VehicleService {
     private VehicleRepository vehicleRepository;
 
     @Override
-    public List<Vehicle> getVehicles() throws Exception {
-        return vehicleRepository.getVehicles();
+    public List<VehicleResponse> getVehicles() throws Exception {
+        List<VehicleResponse> vehicleResponse = new ArrayList<>();
+        vehicleRepository.getVehicles().forEach(vehicle -> vehicleResponse.add(toVehicleResponse(vehicle)));
+        return vehicleResponse;
     }
 
-    public Vehicle getVehicleById(Integer id) throws Exception{
-        return vehicleRepository.getVehicleById(id);
+    public VehicleResponse getVehicleById(Integer id) throws Exception{
+        Vehicle vehicle = vehicleRepository.getVehicleById(id);
+        return toVehicleResponse(vehicle);
     }
 
-    public Vehicle addVehicle(Vehicle vehicle) throws Exception{
-        return vehicleRepository.addVehicle(vehicle);
+    public VehicleResponse addVehicle(VehicleRequest vehicleRequest) throws Exception{
+        Vehicle vehicleSaved = vehicleRepository.addVehicle(toVehicle(vehicleRequest));
+        return  toVehicleResponse(vehicleSaved);
     }
 
-    public Vehicle updateVehicle(Integer id, Vehicle vehicle) throws Exception{
-        return vehicleRepository.updateVehicle(id, vehicle);
+    public VehicleResponse updateVehicle(Integer id, VehicleRequest vehicleRequest) throws Exception{
+        Vehicle vehicleUpdated = vehicleRepository.updateVehicle(id, toVehicle(vehicleRequest));
+        return toVehicleResponse(vehicleUpdated);
     }
 
     public void deleteVehicle(Integer id) throws Exception {
@@ -38,5 +45,35 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
 
+    // Mapper que convierte de Vehicle a VehicleResponse (para la respuesta)
+    private VehicleResponse toVehicleResponse(Vehicle vehicle) {
+        return VehicleResponse.builder()
+                .id(vehicle.getId())
+                .brand(vehicle.getBrand())
+                .model(vehicle.getModel())
+                .milleage(vehicle.getMilleage())
+                .price(vehicle.getPrice())
+                .year(vehicle.getYear())
+                .description(vehicle.getDescription())
+                .colour(vehicle.getColour())
+                .fuelType(vehicle.getFuelType())
+                .numDoors(vehicle.getNumDoors())
+                .build();
+    }
+
+    // Mapper que convierte de VehicleRequest a Vehicle (para crear/actualizar)
+    public Vehicle toVehicle(VehicleRequest request) {
+        return Vehicle.builder()
+                .brand(request.getBrand())
+                .model(request.getModel())
+                .milleage(request.getMilleage())
+                .price(request.getPrice())
+                .year(request.getYear())
+                .description(request.getDescription())
+                .colour(request.getColour())
+                .fuelType(request.getFuelType())
+                .numDoors(request.getNumDoors())
+                .build();
+    }
 }
 
