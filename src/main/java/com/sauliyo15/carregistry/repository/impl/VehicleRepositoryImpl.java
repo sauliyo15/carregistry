@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -24,7 +25,15 @@ public class VehicleRepositoryImpl implements VehicleRepository {
 
     @Override
     public Vehicle getVehicleById(Integer id) throws Exception {
-        return vehiclesList.stream().filter(car -> car.getId() == id).findFirst().get();
+        Optional<Vehicle> vehicleOptional = vehiclesList.stream()
+                .filter(car -> car.getId().equals(id))
+                .findFirst();
+
+        if (vehicleOptional.isPresent()) {
+            return vehicleOptional.get();
+        } else {
+            throw new NoSuchElementException("Vehículo con ID " + id + " no encontrado.");
+        }
     }
 
     @Override
@@ -53,13 +62,21 @@ public class VehicleRepositoryImpl implements VehicleRepository {
 
             return existingVehicle;
         } else {
-            throw new Exception("Vehículo no encontrado");
+            throw new NoSuchElementException("Vehículo con ID " + id + " no encontrado.");
         }
     }
 
     @Override
-    public void deleteVehicle(Integer id) throws Exception {
-        vehiclesList.remove(vehiclesList.stream().filter(car -> car.getId() == id).findFirst().get());
+    public void deleteVehicle(Integer id) throws Exception{
+        Optional<Vehicle> vehicleOptional = vehiclesList.stream()
+                .filter(car -> car.getId().equals(id))
+                .findFirst();
+
+        if (vehicleOptional.isPresent()) {
+            vehiclesList.remove(vehicleOptional.get());
+        } else {
+            throw new NoSuchElementException("Vehículo con ID " + id + " no encontrado.");
+        }
     }
 
 
