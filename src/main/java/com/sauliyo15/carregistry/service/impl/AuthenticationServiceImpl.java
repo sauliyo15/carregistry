@@ -4,6 +4,7 @@ import com.sauliyo15.carregistry.controller.dtos.JwtResponse;
 import com.sauliyo15.carregistry.controller.dtos.LoginRequest;
 import com.sauliyo15.carregistry.controller.dtos.SignRequest;
 import com.sauliyo15.carregistry.entity.UserEntity;
+import com.sauliyo15.carregistry.model.User;
 import com.sauliyo15.carregistry.repository.UserRepository;
 import com.sauliyo15.carregistry.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
 
-    public JwtResponse signup(SignRequest request) throws BadRequestException {
+    public JwtResponse signup(User request) throws BadRequestException {
         var user = UserEntity
                 .builder()
                 .name(request.getName())

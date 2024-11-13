@@ -2,10 +2,12 @@ package com.sauliyo15.carregistry.controller;
 
 import com.sauliyo15.carregistry.controller.dtos.LoginRequest;
 import com.sauliyo15.carregistry.controller.dtos.SignRequest;
+import com.sauliyo15.carregistry.controller.mappers.UserMapper;
 import com.sauliyo15.carregistry.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,13 +23,17 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
+    @Autowired
+    UserMapper userMapper;
+
 
     @PostMapping("/signup")
     @Operation(summary = "User Signup", description = "Registers a new user in the system.")
     public ResponseEntity<?> singup (@RequestBody SignRequest request) {
         log.info("Attempting to register a new user.");
         try {
-            return ResponseEntity.ok(authenticationService.signup(request));
+            return ResponseEntity.ok(authenticationService.signup(userMapper.toUser(request)));
+            //return ResponseEntity.ok(authenticationService.signup(request));
         }
         catch (Exception e) {
             log.error("Error during user registration", e);
