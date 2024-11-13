@@ -2,10 +2,8 @@ package com.sauliyo15.carregistry.controller.mappers;
 
 import com.sauliyo15.carregistry.controller.dtos.BrandRequest;
 import com.sauliyo15.carregistry.controller.dtos.BrandResponse;
-import com.sauliyo15.carregistry.controller.dtos.CarResponse;
 import com.sauliyo15.carregistry.model.Brand;
 import org.springframework.stereotype.Component;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,7 +20,6 @@ public class BrandMapper {
 
     public Brand toBrand(BrandRequest brandRequest) {
         Brand brand = new Brand();
-        brand.setId(brandRequest.getId());
         brand.setName(brandRequest.getName());
         brand.setWarranty(brandRequest.getWarranty());
         brand.setCountry(brandRequest.getCountry());
@@ -32,5 +29,4 @@ public class BrandMapper {
     public List<BrandResponse> toBrandListResponse(List<Brand> brands) {
         return brands.stream().map(this::toBrandResponse).toList();
     }
-
 }

@@ -2,10 +2,8 @@ package com.sauliyo15.carregistry.controller;
 
 import com.sauliyo15.carregistry.controller.dtos.BrandRequest;
 import com.sauliyo15.carregistry.controller.dtos.BrandResponse;
-import com.sauliyo15.carregistry.controller.dtos.CarResponse;
 import com.sauliyo15.carregistry.controller.mappers.BrandMapper;
 import com.sauliyo15.carregistry.model.Brand;
-import com.sauliyo15.carregistry.model.Car;
 import com.sauliyo15.carregistry.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;

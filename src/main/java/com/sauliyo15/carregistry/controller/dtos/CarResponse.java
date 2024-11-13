@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class CarResponse {
 
     private int id;
-    //private BrandResponse brand;
     private String brand;
     private String model;
     private int milleage;

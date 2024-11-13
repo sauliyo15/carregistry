@@ -50,13 +50,15 @@ public class CarServiceImpl implements CarService {
     }
 
     public Car addCar(Car car) throws Exception {
-        Brand brand = brandService.getBrandById(car.getBrand().getId());
+        Brand brand = brandService.getBrandByName(car.getBrand().getName());
         car.setBrand(brand);
         return carConverter.toCar(carRepository.save(carConverter.toCarEntity(car)));
     }
 
     public Car updateCar(Integer id, Car car) throws Exception {
         carRepository.findById(id).orElseThrow(() -> new Exception("Car not found with ID: " + id));
+        Brand brand = brandService.getBrandByName(car.getBrand().getName());
+        car.setBrand(brand);
         CarEntity carEntity = carConverter.toCarEntity(car);
         carEntity.setId(id);
         return carConverter.toCar(carRepository.save(carEntity));

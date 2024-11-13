@@ -11,4 +11,7 @@ public interface BrandService {
     Brand addBrand (Brand brand) throws Exception;
     Brand updateBrand (Integer id, Brand brand) throws Exception;
     void deleteBrand (Integer id) throws Exception;
+
+    Brand getBrandByName(String name) throws Exception;
+
 }

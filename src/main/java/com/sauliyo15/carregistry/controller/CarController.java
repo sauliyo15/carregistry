@@ -4,7 +4,6 @@ import com.sauliyo15.carregistry.controller.dtos.CarRequest;
 import com.sauliyo15.carregistry.controller.dtos.CarResponse;
 import com.sauliyo15.carregistry.controller.mappers.CarMapper;
 import com.sauliyo15.carregistry.model.Car;
-import com.sauliyo15.carregistry.service.BrandService;
 import com.sauliyo15.carregistry.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;

@@ -4,7 +4,6 @@ import com.sauliyo15.carregistry.entity.CarEntity;
 import com.sauliyo15.carregistry.model.Car;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
@@ -30,7 +29,6 @@ public class CarConverter {
 
     public CarEntity toCarEntity(Car car) {
         CarEntity carEntity = new CarEntity();
-        //carEntity.setId(car.getId());
         carEntity.setBrand(brandConverter.toBrandEntity(car.getBrand()));
         carEntity.setModel(car.getModel());
         carEntity.setMilleage(car.getMilleage());

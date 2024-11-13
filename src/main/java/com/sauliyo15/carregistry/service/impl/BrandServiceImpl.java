@@ -23,6 +23,7 @@ public class BrandServiceImpl implements BrandService {
     @Autowired
     private BrandConverter brandConverter;
 
+
     @Override
     @Async
     public CompletableFuture<List<Brand>> getBrands() throws Exception {
@@ -36,7 +37,6 @@ public class BrandServiceImpl implements BrandService {
         log.info("Total time elapsed Getting: " + (endTime-starTime));
         return CompletableFuture.completedFuture(brandList);
     }
-
 
     @Override
     public Brand getBrandById(Integer id) throws Exception {
@@ -57,8 +57,15 @@ public class BrandServiceImpl implements BrandService {
         return brandConverter.toBrand(brandRepository.save(brandEntity));
     }
 
+    @Override
     public void deleteBrand(Integer id) throws Exception {
         brandRepository.findById(id).orElseThrow(() -> new Exception("Brand not found with ID: " + id));
         brandRepository.deleteById(id);
+    }
+
+    @Override
+    public Brand getBrandByName(String name) throws Exception {
+        Optional<BrandEntity> brandEntityOptional = brandRepository.findByName(name);
+        return brandConverter.toBrand(brandEntityOptional.orElseThrow(() -> new Exception("Brand not found with NAME: " + name)));
     }
 }
