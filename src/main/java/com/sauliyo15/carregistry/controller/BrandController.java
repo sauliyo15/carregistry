@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +27,7 @@ public class BrandController {
 
 
     @GetMapping("/brands")
+    @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
     @Operation(summary = "Get all brands", description = "Returns a list of all available brands.")
     public ResponseEntity<?> getBrands() {
         log.info("Fetching brands");
@@ -40,6 +42,7 @@ public class BrandController {
     }
 
     @GetMapping("/brands/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
     @Operation(summary = "Get a brand by ID", description = "Returns the details of a specific brand given its ID.")
     public ResponseEntity<?> getBrandById(@PathVariable Integer id) {
         log.info("Fetching brand with ID: {}", id);
@@ -52,6 +55,7 @@ public class BrandController {
     }
 
     @PostMapping("/brands")
+    @PreAuthorize("hasRole('VENDOR')")
     @Operation(summary = "Add new brand", description = "Allows add new brand by providing the details in the body of the request.")
     public ResponseEntity<?> addBrand(@RequestBody BrandRequest brandRequest) {
         log.info("Adding new car with details: {}", brandRequest);
@@ -65,6 +69,7 @@ public class BrandController {
     }
 
     @PutMapping("/brands/{id}")
+    @PreAuthorize("hasRole('VENDOR')")
     @Operation(summary = "Update a brand", description = "Updates the details of an existing brand given its ID.")
     public ResponseEntity<?> updateBrand(@PathVariable Integer id, @RequestBody BrandRequest brandRequest) {
         log.info("Updating brand with ID: {}", id);
@@ -77,6 +82,7 @@ public class BrandController {
     }
 
     @DeleteMapping("/brands/{id}")
+    @PreAuthorize("hasRole('VENDOR')")
     @Operation(summary = "Delete a brand", description = "Delete a brand given its ID.")
     public ResponseEntity<?> deleteBrand(@PathVariable Integer id) {
         log.info("Deleting brand with ID: {}", id);

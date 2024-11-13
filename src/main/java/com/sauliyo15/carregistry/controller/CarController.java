@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +27,7 @@ public class CarController {
 
 
     @GetMapping("/cars")
+    @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
     @Operation(summary = "Get all cars", description = "Returns a list of all available cars.")
     public ResponseEntity<?> getCars() {
         log.info("Fetching cars");
@@ -40,6 +42,7 @@ public class CarController {
     }
 
     @GetMapping("/cars/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
     @Operation(summary = "Get a car by ID", description = "Returns the details of a specific car given its ID.")
     public ResponseEntity<?> getCarById(@PathVariable Integer id) {
         log.info("Fetching car with ID: {}", id);
@@ -52,6 +55,7 @@ public class CarController {
     }
 
     @PostMapping("/cars")
+    @PreAuthorize("hasRole('VENDOR')")
     @Operation(summary = "Add new car", description = "Allows add new car by providing the details in the body of the request.")
     public ResponseEntity<?> addCar(@RequestBody CarRequest carRequest) {
         log.info("Adding new car with details: {}", carRequest);
@@ -65,6 +69,7 @@ public class CarController {
     }
 
     @PutMapping("/cars/{id}")
+    @PreAuthorize("hasRole('VENDOR')")
     @Operation(summary = "Update a car", description = "Updates the details of an existing car given its ID.")
     public ResponseEntity<?> updateCar(@PathVariable Integer id, @RequestBody CarRequest carRequest) {
         log.info("Updating car with ID: {}", id);
@@ -77,6 +82,7 @@ public class CarController {
     }
 
     @DeleteMapping("/cars/{id}")
+    @PreAuthorize("hasRole('VENDOR')")
     @Operation(summary = "Delete a car", description = "Delete a car given its ID.")
     public ResponseEntity<?> deleteCar(@PathVariable Integer id) {
         log.info("Deleting car with ID: {}", id);
