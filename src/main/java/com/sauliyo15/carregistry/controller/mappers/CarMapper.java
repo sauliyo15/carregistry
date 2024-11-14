@@ -42,4 +42,8 @@ public class CarMapper {
     public List<CarResponse> toCarListResponse(List<Car> cars) {
         return cars.stream().map(this::toCarResponse).toList();
     }
+
+    public List<Car> toCarList(List<CarRequest> carRequestList) {
+        return carRequestList.stream().map(this::toCar).toList();
+    }
 }

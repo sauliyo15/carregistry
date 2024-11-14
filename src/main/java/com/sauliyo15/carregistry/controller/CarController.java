@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -92,6 +94,21 @@ public class CarController {
         } catch (Exception e) {
             log.error("Error deleting car with ID: {}", id, e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/carss")
+    @PreAuthorize("hasRole('VENDOR')")
+    @Operation(summary = "Add a list of cars", description = "Saves and returns a list of cars")
+    public ResponseEntity<?> addCars(@RequestBody List<CarRequest> carRequestList) {
+        log.info("Adding cars");
+        try {
+            CompletableFuture<List<Car>> carListSaved = carService.addCars(carMapper.toCarList(carRequestList));
+            List<CarResponse> carResponseList = carMapper.toCarListResponse(carListSaved.get());
+            return ResponseEntity.ok(carResponseList);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }

@@ -11,4 +11,5 @@ public interface CarService {
     Car addCar (Car car) throws Exception;
     Car updateCar (Integer id, Car car) throws Exception;
     void deleteCar (Integer id) throws Exception;
+    CompletableFuture<List<Car>> addCars (List<Car> carList) throws Exception;
 }

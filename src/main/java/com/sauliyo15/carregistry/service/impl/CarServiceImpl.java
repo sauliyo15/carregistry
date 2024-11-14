@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -67,6 +69,21 @@ public class CarServiceImpl implements CarService {
     public void deleteCar(Integer id) throws Exception {
         carRepository.findById(id).orElseThrow(() -> new Exception("Car not found with ID: " + id));
         carRepository.deleteById(id);
+    }
+
+    @Override
+    public CompletableFuture<List<Car>> addCars(List<Car> carList) throws Exception {
+        long starTime = System.currentTimeMillis();
+        List<CarEntity> carEntityList = new ArrayList<>();
+        for (Car car : carList) {
+            Brand brand = brandService.getBrandByName(car.getBrand().getName());
+            car.setBrand(brand);
+            carEntityList.add(carConverter.toCarEntity(car));
+        }
+        List<Car> carListSaved = carConverter.toCarList(carRepository.saveAll(carEntityList));
+        long endTime = System.currentTimeMillis();
+        log.info("Total time elapsed Getting: " + (endTime-starTime));
+        return CompletableFuture.completedFuture(carListSaved);
     }
 }
 
