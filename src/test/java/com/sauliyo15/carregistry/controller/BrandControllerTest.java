@@ -1,11 +1,8 @@
 package com.sauliyo15.carregistry.controller;
 
-import com.sauliyo15.carregistry.controller.dtos.BrandRequest;
 import com.sauliyo15.carregistry.controller.dtos.BrandResponse;
-import com.sauliyo15.carregistry.controller.dtos.CarResponse;
 import com.sauliyo15.carregistry.controller.mappers.BrandMapper;
 import com.sauliyo15.carregistry.model.Brand;
-import com.sauliyo15.carregistry.model.Car;
 import com.sauliyo15.carregistry.service.BrandService;
 import com.sauliyo15.carregistry.service.impl.JwtService;
 import com.sauliyo15.carregistry.service.impl.UserServiceImpl;
@@ -14,21 +11,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -141,7 +130,7 @@ public class BrandControllerTest {
 
     @Test
     @WithMockUser(username = "test", password = "test", roles = "VENDOR")
-    void deleteBrand_success() throws Exception {
+    void deleteBrand_test() throws Exception {
 
         //Given
         int brandId = 1;
@@ -153,5 +142,20 @@ public class BrandControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/brands/" + brandId))
                 .andExpect(status().isNoContent());
 
+    }
+
+    @Test
+    @WithMockUser(username = "test", password = "test", roles = "VENDOR")
+    void deleteBrand_test_ko() throws Exception {
+
+        //Given
+        int brandId = 1;
+
+        //When
+        doThrow(new RuntimeException("Brand not found")).when(brandService).deleteBrand(brandId);
+
+        //Then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/brands/" + brandId))
+                .andExpect(status().isNotFound());
     }
 }
