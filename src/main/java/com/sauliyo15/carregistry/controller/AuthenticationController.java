@@ -33,7 +33,6 @@ public class AuthenticationController {
         log.info("Attempting to register a new user.");
         try {
             return ResponseEntity.ok(authenticationService.signup(userMapper.toUser(request)));
-            //return ResponseEntity.ok(authenticationService.signup(request));
         }
         catch (Exception e) {
             log.error("Error during user registration", e);

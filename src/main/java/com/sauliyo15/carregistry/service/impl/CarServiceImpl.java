@@ -72,6 +72,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Async
     public CompletableFuture<List<Car>> addCars(List<Car> carList) throws Exception {
         long starTime = System.currentTimeMillis();
         List<CarEntity> carEntityList = new ArrayList<>();
