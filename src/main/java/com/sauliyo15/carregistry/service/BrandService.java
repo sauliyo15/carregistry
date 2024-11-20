@@ -6,12 +6,12 @@ import java.util.concurrent.CompletableFuture;
 
 public interface BrandService {
 
-    CompletableFuture<List<Brand>> getBrands() throws Exception;
-    Brand getBrandById(Integer id) throws Exception;
-    Brand addBrand (Brand brand) throws Exception;
-    Brand updateBrand (Integer id, Brand brand) throws Exception;
-    void deleteBrand (Integer id) throws Exception;
+    CompletableFuture<List<Brand>> getBrands();
+    Brand getBrandById(Integer id);
+    Brand addBrand (Brand brand);
+    Brand updateBrand (Integer id, Brand brand);
+    void deleteBrand (Integer id);
 
-    Brand getBrandByName(String name) throws Exception;
+    Brand getBrandByName(String name);
 
 }

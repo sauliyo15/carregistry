@@ -2,6 +2,8 @@ package com.sauliyo15.carregistry.service.impl;
 
 import com.sauliyo15.carregistry.entity.BrandEntity;
 import com.sauliyo15.carregistry.entity.CarEntity;
+import com.sauliyo15.carregistry.exception.CarNotFoundException;
+import com.sauliyo15.carregistry.exception.CarsNotFoundException;
 import com.sauliyo15.carregistry.model.Brand;
 import com.sauliyo15.carregistry.model.Car;
 import com.sauliyo15.carregistry.repository.CarRepository;
@@ -71,7 +73,7 @@ public class CarServiceImplTest {
         when(carRepository.findAll()).thenReturn(emptyCarEntityList);
 
         // Then
-        Exception exception = assertThrows(Exception.class, () -> carService.getCars().get());
+        CarsNotFoundException exception = assertThrows(CarsNotFoundException.class, () -> carService.getCars());
         assertEquals("No cars found", exception.getMessage());
     }
 
@@ -106,7 +108,7 @@ public class CarServiceImplTest {
         when(carRepository.findById(carId)).thenReturn(Optional.empty());
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> carService.getCarById(carId));
+        CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.getCarById(carId));
         assertEquals("Car not found with ID: " + carId, exception.getMessage());
     }
 

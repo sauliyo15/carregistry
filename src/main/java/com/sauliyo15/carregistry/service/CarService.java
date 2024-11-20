@@ -6,8 +6,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface CarService {
 
-    CompletableFuture<List<Car>> getCars() throws Exception;
-    Car getCarById(Integer id) throws Exception;
+    CompletableFuture<List<Car>> getCars();
+    Car getCarById(Integer id);
     Car addCar (Car car) throws Exception;
     Car updateCar (Integer id, Car car) throws Exception;
     void deleteCar (Integer id) throws Exception;

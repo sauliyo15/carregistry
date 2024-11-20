@@ -1,6 +1,8 @@
 package com.sauliyo15.carregistry.service.impl;
 
 import com.sauliyo15.carregistry.entity.BrandEntity;
+import com.sauliyo15.carregistry.exception.BrandNotFoundException;
+import com.sauliyo15.carregistry.exception.BrandsNotFoundException;
 import com.sauliyo15.carregistry.model.Brand;
 import com.sauliyo15.carregistry.repository.BrandRepository;
 import com.sauliyo15.carregistry.service.converters.BrandConverter;
@@ -18,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BrandServiceImplTest {
+class BrandServiceImplTest {
 
     @InjectMocks
     private BrandServiceImpl brandService;
@@ -65,12 +67,12 @@ public class BrandServiceImplTest {
         when(brandRepository.findAll()).thenReturn(emptyBrandEntityList);
 
         // Then
-        Exception exception = assertThrows(Exception.class, () -> brandService.getBrands().get());
+        BrandsNotFoundException exception = assertThrows(BrandsNotFoundException.class, () -> brandService.getBrands());
         assertEquals("No brands found", exception.getMessage());
     }
 
     @Test
-    void getBrandById_test() throws Exception {
+    void getBrandById_test() {
 
         //Given
         int brandId = 1;
@@ -100,12 +102,12 @@ public class BrandServiceImplTest {
         when(brandRepository.findById(brandId)).thenReturn(Optional.empty());
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> brandService.getBrandById(brandId));
+        BrandNotFoundException exception = assertThrows(BrandNotFoundException.class, () -> brandService.getBrandById(brandId));
         assertEquals("Brand not found with ID: " + brandId, exception.getMessage());
     }
 
     @Test
-    void addBrand_test() throws Exception {
+    void addBrand_test() {
 
         //Given
         int brandId = 1;
@@ -145,12 +147,10 @@ public class BrandServiceImplTest {
     }
 
     @Test
-    void updateBrand_test() throws Exception{
+    void updateBrand_test() {
 
         //Given
         int brandId = 1;
-
-        BrandEntity brandEntityFounded = new BrandEntity();
 
         Brand brandToUpdate = new Brand();
         BrandEntity brandEntityToUpdate = new BrandEntity();
@@ -160,7 +160,7 @@ public class BrandServiceImplTest {
         Brand brandUpdated = new Brand();
 
         //When
-        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brandEntityFounded));
+        when(brandRepository.existsById(brandId)).thenReturn(true);
         when(brandConverter.toBrandEntity(brandToUpdate)).thenReturn(brandEntityToUpdate);
         when(brandRepository.save(brandEntityToUpdate)).thenReturn(brandEntityUpdated);
         when(brandConverter.toBrand(brandEntityUpdated)).thenReturn(brandUpdated);
@@ -179,23 +179,20 @@ public class BrandServiceImplTest {
         Brand brandToUpdate = new Brand();
 
         //When
-        when(brandRepository.findById(brandId)).thenReturn(Optional.empty());
+        when(brandRepository.existsById(brandId)).thenReturn(false);
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> brandService.updateBrand(brandId, brandToUpdate));
-        assertEquals("Brand not found with ID: " + brandId, exception.getMessage());
+        assertThrows(BrandNotFoundException.class, () -> brandService.updateBrand(brandId, brandToUpdate));
     }
 
     @Test
-    void deleteBrand_test() throws Exception {
+    void deleteBrand_test() {
 
         //Given
         int brandId = 1;
 
-        BrandEntity brandEntityFounded = new BrandEntity();
-
         //When
-        when(brandRepository.findById(brandId)).thenReturn(Optional.of(brandEntityFounded));
+        when(brandRepository.existsById(brandId)).thenReturn(true);
 
         //Then
         brandService.deleteBrand(brandId);
@@ -208,15 +205,14 @@ public class BrandServiceImplTest {
         int brandId = 1;
 
         //When
-        when(brandRepository.findById(brandId)).thenReturn(Optional.empty());
+        when(brandRepository.existsById(brandId)).thenReturn(false);
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> brandService.deleteBrand(brandId));
-        assertEquals("Brand not found with ID: " + brandId, exception.getMessage());
+        assertThrows(BrandNotFoundException.class, () -> brandService.deleteBrand(brandId));
     }
 
     @Test
-    void getBrandByName_test() throws Exception {
+    void getBrandByName_test() {
 
         //Given
         String brandName = "BMW";
@@ -246,7 +242,7 @@ public class BrandServiceImplTest {
         when(brandRepository.findByName(brandName)).thenReturn(Optional.empty());
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> brandService.getBrandByName(brandName));
+        BrandNotFoundException exception = assertThrows(BrandNotFoundException.class, () -> brandService.getBrandByName(brandName));
         assertEquals("Brand not found with NAME: " + brandName, exception.getMessage());
     }
 }

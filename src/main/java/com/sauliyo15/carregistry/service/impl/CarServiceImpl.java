@@ -1,6 +1,8 @@
 package com.sauliyo15.carregistry.service.impl;
 
 import com.sauliyo15.carregistry.entity.CarEntity;
+import com.sauliyo15.carregistry.exception.CarNotFoundException;
+import com.sauliyo15.carregistry.exception.CarsNotFoundException;
 import com.sauliyo15.carregistry.model.Brand;
 import com.sauliyo15.carregistry.model.Car;
 import com.sauliyo15.carregistry.repository.CarRepository;
@@ -21,34 +23,38 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class CarServiceImpl implements CarService {
 
-    @Autowired
-    private CarRepository carRepository;
+    private final CarRepository carRepository;
 
-    @Autowired
-    private BrandService brandService;
+    private final BrandService brandService;
 
-    @Autowired
-    private CarConverter carConverter;
+    private final CarConverter carConverter;
 
+
+    public CarServiceImpl(CarRepository carRepository, BrandService brandService, CarConverter carConverter) {
+        this.carRepository = carRepository;
+        this.brandService = brandService;
+        this.carConverter = carConverter;
+    }
 
     @Override
     @Async
-    public CompletableFuture<List<Car>> getCars() throws Exception {
+    public CompletableFuture<List<Car>> getCars() {
         long starTime = System.currentTimeMillis();
         List<CarEntity> carEntityList = carRepository.findAll();
         if (carEntityList.isEmpty()) {
-            throw new Exception("No cars found");
+            throw new CarsNotFoundException();
         }
         List<Car> carList = carConverter.toCarList(carEntityList);
         long endTime = System.currentTimeMillis();
-        log.info("Total time elapsed Getting: " + (endTime-starTime));
+        log.info("Total time elapsed Getting: {}", endTime-starTime);
         return CompletableFuture.completedFuture(carList);
     }
 
     @Override
-    public Car getCarById(Integer id) throws Exception {
+    public Car getCarById(Integer id) {
         Optional<CarEntity> carEntityOptional = carRepository.findById(id);
-        return carConverter.toCar(carEntityOptional.orElseThrow(() -> new Exception("Car not found with ID: " + id)));
+        CarEntity carEntity = carEntityOptional.orElseThrow(() -> new CarNotFoundException(id));
+        return carConverter.toCar(carEntity);
     }
 
     public Car addCar(Car car) throws Exception {

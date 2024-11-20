@@ -2,7 +2,6 @@ package com.sauliyo15.carregistry.service.impl;
 
 import com.sauliyo15.carregistry.controller.dtos.JwtResponse;
 import com.sauliyo15.carregistry.controller.dtos.LoginRequest;
-import com.sauliyo15.carregistry.controller.dtos.SignRequest;
 import com.sauliyo15.carregistry.entity.UserEntity;
 import com.sauliyo15.carregistry.model.User;
 import com.sauliyo15.carregistry.repository.UserRepository;

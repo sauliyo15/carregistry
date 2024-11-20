@@ -2,15 +2,18 @@ package com.sauliyo15.carregistry.service.converters;
 
 import com.sauliyo15.carregistry.entity.CarEntity;
 import com.sauliyo15.carregistry.model.Car;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
 public class CarConverter {
 
-    @Autowired
-    private BrandConverter brandConverter;
+    private final BrandConverter brandConverter;
+
+
+    public CarConverter(BrandConverter brandConverter) {
+        this.brandConverter = brandConverter;
+    }
 
     public Car toCar(CarEntity carEntity) {
         Car car = new Car();
