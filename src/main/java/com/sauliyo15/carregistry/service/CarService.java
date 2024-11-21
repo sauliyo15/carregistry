@@ -8,8 +8,8 @@ public interface CarService {
 
     CompletableFuture<List<Car>> getCars();
     Car getCarById(Integer id);
-    Car addCar (Car car) throws Exception;
-    Car updateCar (Integer id, Car car) throws Exception;
-    void deleteCar (Integer id) throws Exception;
-    CompletableFuture<List<Car>> addCars (List<Car> carList) throws Exception;
+    Car addCar (Car car);
+    Car updateCar (Integer id, Car car);
+    void deleteCar (Integer id);
+    CompletableFuture<List<Car>> addCars (List<Car> carList);
 }

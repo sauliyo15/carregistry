@@ -30,6 +30,8 @@ public class UserEntity implements UserDetails {
 
     private String role;
 
+    private String image;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

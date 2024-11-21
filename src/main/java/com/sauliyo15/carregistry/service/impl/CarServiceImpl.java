@@ -57,14 +57,18 @@ public class CarServiceImpl implements CarService {
         return carConverter.toCar(carEntity);
     }
 
-    public Car addCar(Car car) throws Exception {
+    public Car addCar(Car car) {
         Brand brand = brandService.getBrandByName(car.getBrand().getName());
         car.setBrand(brand);
-        return carConverter.toCar(carRepository.save(carConverter.toCarEntity(car)));
+        CarEntity carEntity = carConverter.toCarEntity(car);
+        CarEntity savedEntity = carRepository.save(carEntity);
+        return carConverter.toCar(savedEntity);
     }
 
-    public Car updateCar(Integer id, Car car) throws Exception {
-        carRepository.findById(id).orElseThrow(() -> new Exception("Car not found with ID: " + id));
+    public Car updateCar(Integer id, Car car) {
+        if (!carRepository.existsById(id)) {
+            throw new CarNotFoundException(id);
+        }
         Brand brand = brandService.getBrandByName(car.getBrand().getName());
         car.setBrand(brand);
         CarEntity carEntity = carConverter.toCarEntity(car);
@@ -72,14 +76,16 @@ public class CarServiceImpl implements CarService {
         return carConverter.toCar(carRepository.save(carEntity));
     }
 
-    public void deleteCar(Integer id) throws Exception {
-        carRepository.findById(id).orElseThrow(() -> new Exception("Car not found with ID: " + id));
+    public void deleteCar(Integer id) {
+        if (!carRepository.existsById(id)) {
+            throw new CarNotFoundException(id);
+        }
         carRepository.deleteById(id);
     }
 
     @Override
     @Async
-    public CompletableFuture<List<Car>> addCars(List<Car> carList) throws Exception {
+    public CompletableFuture<List<Car>> addCars(List<Car> carList) {
         long starTime = System.currentTimeMillis();
         List<CarEntity> carEntityList = new ArrayList<>();
         for (Car car : carList) {

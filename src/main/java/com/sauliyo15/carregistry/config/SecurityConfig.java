@@ -29,6 +29,9 @@ public class SecurityConfig {
     private final UserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
 
+    private static String brandsRoute = "/brands/**";
+    private static String carsRoute = "/cars/**";
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -50,10 +53,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login", "/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/cars/**", "/brands/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/cars/**", "/brands/**", "/carss/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/cars/**", "/brands/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/cars/**", "/brands/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, carsRoute, brandsRoute).permitAll()
+                        .requestMatchers(HttpMethod.POST, carsRoute, brandsRoute, "/carss/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, carsRoute, brandsRoute).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, carsRoute, brandsRoute).permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

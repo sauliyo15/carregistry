@@ -1,7 +1,7 @@
 package com.sauliyo15.carregistry.service.impl;
 
-import com.sauliyo15.carregistry.entity.BrandEntity;
 import com.sauliyo15.carregistry.entity.CarEntity;
+import com.sauliyo15.carregistry.exception.BrandNotFoundException;
 import com.sauliyo15.carregistry.exception.CarNotFoundException;
 import com.sauliyo15.carregistry.exception.CarsNotFoundException;
 import com.sauliyo15.carregistry.model.Brand;
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CarServiceImplTest {
+class CarServiceImplTest {
 
     @InjectMocks
     private CarServiceImpl carService;
@@ -78,7 +78,7 @@ public class CarServiceImplTest {
     }
 
     @Test
-    void getCarById_test() throws Exception {
+    void getCarById_test() {
 
         //Given
         int carId = 1;
@@ -113,7 +113,7 @@ public class CarServiceImplTest {
     }
 
     @Test
-    void addCar_test() throws Exception{
+    void addCar_test() {
 
         //Given
         int carId = 1;
@@ -145,9 +145,9 @@ public class CarServiceImplTest {
     }
 
     @Test
-    void addCar_test_ko() throws Exception {
+    void addCar_test_ko() {
 
-        // Given
+        //Given
         String brandName = "Audi";
 
         Brand brand = new Brand();
@@ -158,21 +158,21 @@ public class CarServiceImplTest {
 
         CarEntity carEntityToSave = new CarEntity();
 
-        // When
+        //When
         when(brandService.getBrandByName(brandName)).thenReturn(brand);
         when(carConverter.toCarEntity(carToSave)).thenReturn(carEntityToSave);
         when(carRepository.save(carEntityToSave))
                 .thenThrow(new RuntimeException("Error saving car in repository"));
 
-        // Then
+        //Then
         Exception exception = assertThrows(RuntimeException.class, () -> carService.addCar(carToSave));
         assertEquals("Error saving car in repository", exception.getMessage());
     }
 
     @Test
-    void addCar_test_ko_brandNotFound() throws Exception {
+    void addCar_test_ko_brandNotFound() {
 
-        // Given
+        //Given
         String brandName = "Audi";
 
         Brand brand = new Brand();
@@ -181,23 +181,21 @@ public class CarServiceImplTest {
         Car carToSave = new Car();
         carToSave.setBrand(brand);
 
-        // When
+        //When
         when(brandService.getBrandByName(brandName))
-                .thenThrow(new Exception("Brand not found with name: " + brandName));
+                .thenThrow(new BrandNotFoundException(brandName));
 
-        // Then
-        Exception exception = assertThrows(Exception.class, () -> carService.addCar(carToSave));
-        assertEquals("Brand not found with name: " + brandName, exception.getMessage());
+        //Then
+        BrandNotFoundException exception = assertThrows(BrandNotFoundException.class, () -> carService.addCar(carToSave));
+        assertEquals("Brand not found with NAME: Audi", exception.getMessage());
     }
 
     @Test
-    void updateCar_test() throws Exception {
+    void updateCar_test() {
 
         //Given
         int carId = 1;
         String brandName = "Audi";
-
-        CarEntity carEntityFounded = new CarEntity();
 
         Brand brand = new Brand();
         brand.setName(brandName);
@@ -213,7 +211,7 @@ public class CarServiceImplTest {
         Car carUpdated = new Car();
 
         //When
-        when(carRepository.findById(carId)).thenReturn(Optional.of(carEntityFounded));
+        when(carRepository.existsById(carId)).thenReturn(true);
         when(brandService.getBrandByName(brandName)).thenReturn(brand);
         when(carConverter.toCarEntity(carToUpdate)).thenReturn(carEntityToUpdate);
         when(carRepository.save(carEntityToUpdate)).thenReturn(carEntityUpdated);
@@ -225,13 +223,11 @@ public class CarServiceImplTest {
     }
 
     @Test
-    void updateCar_test_ko() throws Exception {
+    void updateCar_test_ko() {
 
         // Given
         int carId = 1;
         String brandName = "Audi";
-
-        CarEntity carEntityFounded = new CarEntity();
 
         Brand brand = new Brand();
         brand.setName(brandName);
@@ -243,7 +239,7 @@ public class CarServiceImplTest {
         carEntityToUpdate.setId(carId);
 
         // When
-        when(carRepository.findById(carId)).thenReturn(Optional.of(carEntityFounded));
+        when(carRepository.existsById(carId)).thenReturn(true);
         when(brandService.getBrandByName(brandName)).thenReturn(brand);
         when(carConverter.toCarEntity(carToUpdate)).thenReturn(carEntityToUpdate);
         when(carRepository.save(carEntityToUpdate))
@@ -263,21 +259,19 @@ public class CarServiceImplTest {
         Car carToUpdate = new Car();
 
         //When
-        when(carRepository.findById(carId)).thenReturn(Optional.empty());
+        when(carRepository.existsById(carId)).thenReturn(false);
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> carService.updateCar(carId, carToUpdate));
+        CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.updateCar(carId, carToUpdate));
         assertEquals("Car not found with ID: " + carId, exception.getMessage());
     }
 
     @Test
-    void updateCar_test_ko_BrandNotFound() throws Exception{
+    void updateCar_test_ko_BrandNotFound() {
 
-        // Given
+        //Given
         int carId = 1;
         String brandName = "Audi";
-
-        CarEntity carEntityFounded = new CarEntity();
 
         Car carToUpdate = new Car();
 
@@ -288,26 +282,24 @@ public class CarServiceImplTest {
         CarEntity carEntityToUpdate = new CarEntity();
         carEntityToUpdate.setId(carId);
 
-        // When
-        when(carRepository.findById(carId)).thenReturn(Optional.of(carEntityFounded));
+        //When
+        when(carRepository.existsById(carId)).thenReturn(true);
         when(brandService.getBrandByName(brandName))
-                .thenThrow(new Exception("Brand not found with name: " + brandName));
+                .thenThrow(new BrandNotFoundException(brandName));
 
-        // Then
-        Exception exception = assertThrows(Exception.class, () -> carService.updateCar(carId, carToUpdate));
-        assertEquals("Brand not found with name: " + brandName, exception.getMessage());
+        //Then
+        BrandNotFoundException exception = assertThrows(BrandNotFoundException.class, () -> carService.updateCar(carId, carToUpdate));
+        assertEquals("Brand not found with NAME: " + brandName, exception.getMessage());
     }
 
     @Test
-    void deleteCar_test() throws Exception{
+    void deleteCar_test() {
 
         //Given
         int carId = 1;
 
-        CarEntity carEntityFounded = new CarEntity();
-
         //When
-        when(carRepository.findById(carId)).thenReturn(Optional.of(carEntityFounded));
+        when(carRepository.existsById(carId)).thenReturn(true);
 
         //Then
         carService.deleteCar(carId);
@@ -320,10 +312,10 @@ public class CarServiceImplTest {
         int carId = 1;
 
         //When
-        when(carRepository.findById(carId)).thenReturn(Optional.empty());
+        when(carRepository.existsById(carId)).thenReturn(false);
 
         //Then
-        Exception exception = assertThrows(Exception.class, () -> carService.deleteCar(carId));
+        CarNotFoundException exception = assertThrows(CarNotFoundException.class, () -> carService.deleteCar(carId));
         assertEquals("Car not found with ID: " + carId, exception.getMessage());
     }
 
@@ -369,7 +361,7 @@ public class CarServiceImplTest {
     }
 
     @Test
-    void addCars_test_ko() throws Exception {
+    void addCars_test_ko() {
 
         // Given
         String brandName = "Audi";
@@ -415,7 +407,7 @@ public class CarServiceImplTest {
     }
 
     @Test
-    void addCars_test_ko_BrandNotFound() throws Exception{
+    void addCars_test_ko_BrandNotFound() {
 
         // Given
         String brandName = "Audi";
@@ -433,10 +425,10 @@ public class CarServiceImplTest {
 
         // When
         when(brandService.getBrandByName(brandName))
-                .thenThrow(new Exception("Brand not found with name: " + brandName));
+                .thenThrow(new BrandNotFoundException(brandName));
 
         // Then
-        Exception exception = assertThrows(Exception.class, () -> carService.addCars(carListToAdd).join());
-        assertEquals("Brand not found with name: " + brandName, exception.getMessage());
+        BrandNotFoundException exception = assertThrows(BrandNotFoundException.class, () -> carService.addCars(carListToAdd).join());
+        assertEquals("Brand not found with NAME: " + brandName, exception.getMessage());
     }
 }

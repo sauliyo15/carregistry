@@ -7,7 +7,6 @@ import com.sauliyo15.carregistry.model.Brand;
 import com.sauliyo15.carregistry.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,12 +18,15 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 public class BrandController {
 
-    @Autowired
-    private BrandService brandService;
+    private final BrandService brandService;
 
-    @Autowired
-    private BrandMapper brandMapper;
+    private final BrandMapper brandMapper;
 
+
+    public BrandController(BrandService brandService, BrandMapper brandMapper) {
+        this.brandService = brandService;
+        this.brandMapper = brandMapper;
+    }
 
     @GetMapping("/brands")
     @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
