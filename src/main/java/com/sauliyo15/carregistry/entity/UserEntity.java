@@ -30,6 +30,7 @@ public class UserEntity implements UserDetails {
 
     private String role;
 
+    @Column(columnDefinition = "TEXT")
     private String image;
 
 

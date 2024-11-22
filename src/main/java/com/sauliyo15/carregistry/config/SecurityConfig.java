@@ -31,6 +31,7 @@ public class SecurityConfig {
 
     private static String brandsRoute = "/brands/**";
     private static String carsRoute = "/cars/**";
+    private static String usersRoute = "/users/**";
 
 
     @Bean
@@ -53,8 +54,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login", "/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET, carsRoute, brandsRoute).permitAll()
-                        .requestMatchers(HttpMethod.POST, carsRoute, brandsRoute, "/carss/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, carsRoute, brandsRoute, usersRoute).permitAll()
+                        .requestMatchers(HttpMethod.POST, carsRoute, brandsRoute, "/carss/**", usersRoute).permitAll()
                         .requestMatchers(HttpMethod.PUT, carsRoute, brandsRoute).permitAll()
                         .requestMatchers(HttpMethod.DELETE, carsRoute, brandsRoute).permitAll()
                         .anyRequest().authenticated()

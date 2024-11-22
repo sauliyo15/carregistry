@@ -17,5 +17,18 @@ public class Car {
     private String colour;
     private String fuelType;
     private int numDoors;
+
+    @Override
+    public String toString() {
+        return model + "," +
+                brand.getName() + "," +
+                milleage + "," +
+                price + "," +
+                year + "," +
+                description + "," +
+                colour + "," +
+                fuelType + "," +
+                numDoors;
+    }
 }
 

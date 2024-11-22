@@ -7,11 +7,13 @@ import com.sauliyo15.carregistry.model.Car;
 import com.sauliyo15.carregistry.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,12 +21,15 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 public class CarController {
 
-    @Autowired
-    private CarService carService;
+    private final CarService carService;
 
-    @Autowired
-    private CarMapper carMapper;
+    private final CarMapper carMapper;
 
+
+    public CarController(CarService carService, CarMapper carMapper) {
+        this.carService = carService;
+        this.carMapper = carMapper;
+    }
 
     @GetMapping("/cars")
     @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
@@ -108,6 +113,40 @@ public class CarController {
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping("/cars/download")
+    @PreAuthorize("hasAnyRole('CLIENT','VENDOR')")
+    @Operation(summary = "Download a list of cars", description = "Download a list of cars in CSV file")
+    public ResponseEntity<?> downloadCars() throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "cars.csv");
+
+        byte[] csvBytes = carService.downloadCarsCsv().getBytes();
+
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/cars/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('VENDOR')")
+    public ResponseEntity<String> uploadCsv(@RequestParam(value = "file") MultipartFile file) {
+
+        if (file.isEmpty()) {
+            log.error("The file it's empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        String filename = file.getOriginalFilename().toLowerCase();
+        if (!filename.endsWith(".csv")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid file type. Only .csv are allowed.");
+        }
+        log.info("Filename it's {}", filename);
+
+        carService.uploadCarsCsv(file);
+
+        return ResponseEntity.ok("File succesfully uploaded");
     }
 }
 
