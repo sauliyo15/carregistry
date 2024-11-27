@@ -111,7 +111,7 @@ public class CarServiceImpl implements CarService {
                 "colour", "fuelType", "numDoors"};
 
         try {
-            List<Car> carList = this.getCars().get();
+            List<Car> carList = getCars().get();
 
             StringBuilder csvContent = new StringBuilder();
 
@@ -154,7 +154,7 @@ public class CarServiceImpl implements CarService {
                 carList.add(car);
             }
 
-            this.addCars(carList).get();
+           addCars(carList).get();
             log.info("File succesfully uploaded");
 
         } catch (Exception e) {

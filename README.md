@@ -1,35 +1,63 @@
 # API de Gestión de Vehículos y Marcas
 
-Este proyecto es una API RESTful desarrollada en Spring Boot para gestionar información de vehículos y sus marcas. La aplicación permite realizar operaciones CRUD sobre vehículos y marcas, facilitando así la administración de estos elementos de forma eficiente y escalable.
+Este proyecto es una API RESTful desarrollada con **Spring Boot** que simula un sistema de gestión para un concesionario. Permite administrar vehículos y marcas, con características avanzadas como autenticación JWT, subida de imágenes, exportación/importación de datos en formato CSV, y documentación con Swagger.
 
 
-## Descripción
+## Características Principales
 
 La API de Gestión de Vehículos y Marcas permite:
 
 - **Gestión de Vehículos**: crear, actualizar, leer y eliminar información sobre vehículos.
 - **Gestión de Marcas**: crear, actualizar, leer y eliminar información sobre marcas de vehículos.
 - **Asociación**: vincular vehículos con sus respectivas marcas.
-- **Consulta**: obtener información detallada sobre vehículos y marcas disponibles.
+- **Seguridad**: autenticación de usuarios mediante JWT y autorización de operaciones basada en roles usando Spring Security.
+- **Operaciones Asíncronas**: operaciones masivas para la carga y gestión eficiente de datos.
+- **Gestión de Archivos**: subida de imágenes asociadas a usuarios y exportación e importación de datos en formato CSV.
+- **Testing**: amplia cobertura de pruebas con Mockito y JUnit.
 
 
 ## Tecnologías Utilizadas
 
 - **Java 17**
 - **Spring Boot 3**
-- **MySQL** en contenedor Docker
-- **Spring Data JPA** para la gestión de entidades
-- **Lombok** para simplificación de código
-- **Docker** para el contenedor de base de datos
+- **MySQL** (contenedor Docker)
+- **Spring Data JPA**
+- **Spring Security**
+- **Lombok**
+- **Docker**
+- **Swagger (SpringDoc OpenAPI)**
+- **Commons CSV**
+
+
+## Estructura del proyecto
+
+La aplicación está organizada en paquetes siguiendo las mejores prácticas de arquitectura en capas:
+
+- **config**: configuración global de la aplicación.
+- **controller**: controladores REST.
+- **dtos**: objetos de transferencia de datos.
+- **mappers/converters**: transformación entre entidades y DTOs.
+- **entitys**: entidades JPA para la base de datos.
+- **exception**: excepciones personalizadas.
+- **filter**: filtros de seguridad, como interceptores JWT.
+- **model**: modelos de negocio.
+- **repositorys**: interfaces de repositorios JPA.
+- **services**: lógica de negocio.
+- **testing**: paquetes paralelos con pruebas unitarias e integración.
 
 
 ## Dependencias Principales
 
-- **Spring Boot Starter Web**: para construir la API REST.
-- **Spring Boot Starter Data JPA**: para la integración con JPA y la persistencia de datos.
-- **SpringDoc OpenAPI**: para la documentación de la API con Swagger UI.
-- **Lombok**: para reducir el boilerplate y facilitar la creación de entidades.
-- **MySQL Connector**: driver para conectarse a la base de datos MySQL.
+Las principales dependencias utilizadas en este proyecto incluyen:
+
+- **Spring Boot Starter Web**: construcción de la API REST.
+- **Spring Boot Starter Data JPA**: gestión de la persistencia de datos.
+- **Spring Boot Starter Security**: implementación de seguridad.
+- **JJWT**: manejo de autenticación JWT.
+- **SpringDoc OpenAPI**: documentación de la API con Swagger UI.
+- **Lombok**: reducción de código repetitivo.
+- **MySQL Connector**: driver para la base de datos.
+- **Apache Commons CSV**: procesamiento de archivos CSV.
 
 
 ## Configuración Inicial
