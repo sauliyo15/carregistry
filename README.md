@@ -10,7 +10,8 @@ La API de Gestión de Vehículos y Marcas permite:
 - **Gestión de Vehículos**: crear, actualizar, leer y eliminar información sobre vehículos.
 - **Gestión de Marcas**: crear, actualizar, leer y eliminar información sobre marcas de vehículos.
 - **Asociación**: vincular vehículos con sus respectivas marcas.
-- **Seguridad**: autenticación de usuarios mediante JWT y autorización de operaciones basada en roles usando Spring Security.
+- **Registro de usuarios**: registro de usuarios en el la base de datos
+- **Seguridad**: login y autenticación de usuarios mediante JWT y autorización de operaciones basada en roles usando Spring Security.
 - **Operaciones Asíncronas**: operaciones masivas para la carga y gestión eficiente de datos.
 - **Gestión de Archivos**: subida de imágenes asociadas a usuarios y exportación e importación de datos en formato CSV.
 - **Testing**: amplia cobertura de pruebas con Mockito y JUnit.
